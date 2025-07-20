@@ -1,5 +1,6 @@
 package com.nataliya.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -13,16 +14,12 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 @Configuration
-@ComponentScan("com.nataliya")
+@ComponentScan("com.nataliya.controller")
 @EnableWebMvc
-public class SpringConfig implements WebMvcConfigurer {
+@RequiredArgsConstructor
+public class WebMvcConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
-
-    @Autowired
-    public SpringConfig(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
