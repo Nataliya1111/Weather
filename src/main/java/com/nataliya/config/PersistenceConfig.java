@@ -35,6 +35,7 @@ public class PersistenceConfig {
 
     private Properties hibernateProperties(){
         Properties properties = new Properties();
+        properties.setProperty("hibernate.default_schema", env.getRequiredProperty("hibernate.default_schema"));
         properties.setProperty("hibernate.dialect", env.getRequiredProperty("hibernate.dialect"));
         properties.setProperty("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
         properties.setProperty("hibernate.format_sql", env.getRequiredProperty("hibernate.format_sql"));
