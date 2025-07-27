@@ -33,7 +33,7 @@ public class PersistenceConfig {
         return new HikariDataSource(config);
     }
 
-    private Properties hibernateProperties(){
+    private Properties hibernateProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.default_schema", env.getRequiredProperty("hibernate.default_schema"));
         properties.setProperty("hibernate.dialect", env.getRequiredProperty("hibernate.dialect"));
@@ -52,7 +52,7 @@ public class PersistenceConfig {
     }
 
     @Bean
-    public PlatformTransactionManager hibernateTransactionManager(){
+    public PlatformTransactionManager hibernateTransactionManager() {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory().getObject());
         return transactionManager;

@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 public class FlywayConfig {
 
     @Bean
-    public Flyway flyway(DataSource dataSource){
+    public Flyway flyway(DataSource dataSource) {
         Flyway flyway = Flyway.configure().dataSource(dataSource).defaultSchema("main").load();
         flyway.migrate();
         return flyway;
