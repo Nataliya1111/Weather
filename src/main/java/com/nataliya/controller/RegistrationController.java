@@ -1,7 +1,9 @@
 package com.nataliya.controller;
 
 import com.nataliya.dto.UserRegistrationDto;
+import com.nataliya.service.RegistrationService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,7 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/register")
+@RequiredArgsConstructor
 public class RegistrationController {
+
+    private final RegistrationService registrationService;
 
     @GetMapping
     public String showRegistrationPage(@ModelAttribute("registrationData") UserRegistrationDto userRegistrationDto) {
@@ -26,7 +31,7 @@ public class RegistrationController {
             }
             return "sign-up";
         }
-        //service.save
+        registrationService.registerUser(userRegistrationDto);
 
         return "redirect:/register";
 
