@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @ToString
 @EqualsAndHashCode
 public class User {
@@ -24,4 +25,9 @@ public class User {
     @EqualsAndHashCode.Exclude
     @Column(name = "Password", nullable = false)
     private String password;
+
+    public User(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
 }

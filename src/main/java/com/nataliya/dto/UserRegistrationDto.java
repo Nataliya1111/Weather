@@ -11,12 +11,14 @@ public record UserRegistrationDto(
                 message = "Login must be 3 to 20 characters long and contain only letters and digits"
         )
         String login,
+
         @NotBlank(message = "Password should not be empty")
         @Pattern(
                 regexp = "^(?=.*[A-Z])(?=.*\\d).{6,20}$",
                 message = "Password must be 6 to 20 characters long, contain at least one uppercase letter and one digit"
         )
         String password,
+
         @NotBlank(message = "Repeat password should not be empty")
         String repeatPassword
 ) {
