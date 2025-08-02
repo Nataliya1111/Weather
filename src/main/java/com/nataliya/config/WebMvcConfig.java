@@ -14,7 +14,7 @@ import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 @Configuration
-@ComponentScan("com.nataliya.controller")
+@ComponentScan(basePackages = {"com.nataliya.controller", "com.nataliya.handler"})
 @EnableWebMvc
 @RequiredArgsConstructor
 public class WebMvcConfig implements WebMvcConfigurer {

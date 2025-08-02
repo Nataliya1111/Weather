@@ -23,6 +23,10 @@
                  th:text="${passwordsMatchError}">
                 Passwords match error
             </div>
+            <div class="alert alert-danger" role="alert" th:if="${userAlreadyExistsMessage}"
+                 th:text="${userAlreadyExistsMessage}">
+                User already exists error
+            </div>
         </div>
     </div>
 

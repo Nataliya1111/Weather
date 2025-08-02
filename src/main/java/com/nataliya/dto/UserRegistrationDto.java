@@ -23,7 +23,7 @@ public record UserRegistrationDto(
         String repeatPassword
 ) {
     @AssertTrue(message = "Passwords do not match")
-    private boolean isPasswordsMatch() {
+    private boolean isPasswordsMatch() {  //it creates the field "passwordsMatch" used in bindingResult.hasFieldErrors("field")
         return password.equals(repeatPassword);
     }
 
