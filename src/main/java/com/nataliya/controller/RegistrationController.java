@@ -10,7 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/register")
+@RequestMapping("/sign-up")
 @RequiredArgsConstructor
 public class RegistrationController {
 
@@ -33,7 +33,6 @@ public class RegistrationController {
         }
         registrationService.registerUser(userRegistrationDto);
 
-        return "redirect:/register";
-
+        return "redirect:/sign-in";
     }
 }
