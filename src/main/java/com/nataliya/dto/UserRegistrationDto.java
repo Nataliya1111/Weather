@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 public record UserRegistrationDto(
-        @NotBlank(message = "Name should not be empty")
+        @NotBlank(message = "Username should not be empty")
         @Pattern(
                 regexp = "^[a-zA-Z0-9]{3,20}$",
                 message = "Login must be 3 to 20 characters long and contain only letters and digits"
