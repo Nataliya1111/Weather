@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS Sessions
+(
+    id         UUID PRIMARY KEY,
+    user_id    BIGINT REFERENCES users (id) NOT NULL,
+    expires_at TIMESTAMP WITHOUT TIME ZONE  NOT NULL
+);
