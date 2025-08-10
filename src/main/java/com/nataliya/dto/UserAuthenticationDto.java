@@ -3,7 +3,7 @@ package com.nataliya.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-public record UserDto(
+public record UserAuthenticationDto(
 
         @NotBlank(message = "Username should not be empty")
         String login,

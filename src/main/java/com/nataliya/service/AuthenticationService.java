@@ -1,6 +1,6 @@
 package com.nataliya.service;
 
-import com.nataliya.dto.UserDto;
+import com.nataliya.dto.UserAuthenticationDto;
 import com.nataliya.exception.AuthenticationException;
 import com.nataliya.model.User;
 import com.nataliya.repository.UserRepository;
@@ -14,12 +14,12 @@ public class AuthenticationService {
 
     private final UserRepository userRepository;
 
-    public User getByLoginAndPassword(UserDto userDto) {
+    public User getByLoginAndPassword(UserAuthenticationDto userAuthenticationDto) {
 
-        User user = userRepository.findByLogin(userDto.login())
+        User user = userRepository.findByLogin(userAuthenticationDto.login())
                 .orElseThrow(() -> new AuthenticationException("Invalid username or password"));
 
-        if (!isPasswordMatches(userDto.password(), user.getPassword())) {
+        if (!isPasswordMatches(userAuthenticationDto.password(), user.getPassword())) {
             throw new AuthenticationException("Invalid username or password");
         }
 

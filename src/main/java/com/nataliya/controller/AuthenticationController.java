@@ -1,12 +1,11 @@
 package com.nataliya.controller;
 
-import com.nataliya.dto.UserDto;
+import com.nataliya.dto.UserAuthenticationDto;
 import com.nataliya.model.Session;
 import com.nataliya.model.User;
 import com.nataliya.service.AuthenticationService;
 import com.nataliya.service.SessionService;
 import com.nataliya.util.CookieUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -34,18 +33,17 @@ public class AuthenticationController {
     private final Duration sessionTimeout;
 
     @GetMapping
-    public String showAuthenticationPage(@ModelAttribute("signInData") UserDto userDto,
+    public String showAuthenticationPage(@ModelAttribute("signInData") UserAuthenticationDto userAuthenticationDto,
                                          HttpServletRequest request) {
 
-        Cookie[] cookies = request.getCookies();
-        if (CookieUtil.isSessionIdCookiePresent(cookies)) {
+        if (CookieUtil.isSessionIdCookiePresent(request.getCookies())) {
             return HOME_REDIRECT;
         }
         return SIGN_IN_VIEW;
     }
 
     @PostMapping
-    public String signIn(@Valid @ModelAttribute("signInData") UserDto userDto,
+    public String signIn(@Valid @ModelAttribute("signInData") UserAuthenticationDto userAuthenticationDto,
                          BindingResult bindingResult,
                          Model model,
                          HttpServletResponse response) {
@@ -54,7 +52,7 @@ public class AuthenticationController {
             return SIGN_IN_VIEW;
         }
 
-        User user = authenticationService.getByLoginAndPassword(userDto);
+        User user = authenticationService.getByLoginAndPassword(userAuthenticationDto);
 
         Session session = sessionService.createSession(user, sessionTimeout);
         var cookie = CookieUtil.createSessionIdCookie(session.getId(), (int) sessionTimeout.toSeconds());
