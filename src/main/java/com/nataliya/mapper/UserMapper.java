@@ -1,5 +1,6 @@
 package com.nataliya.mapper;
 
+import com.nataliya.dto.UserDto;
 import com.nataliya.dto.UserRegistrationDto;
 import com.nataliya.model.User;
 import org.mapstruct.Mapper;
@@ -9,5 +10,7 @@ import org.mapstruct.MappingConstants;
 public interface UserMapper {
 
     User userRegistrationDtoToUser(UserRegistrationDto userRegistrationDto);
+
+    UserDto userToUserDto(User user);
 }
 
