@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
                         () -> log.warn("SessionId cookie missing when attempting deletion")
                 );
 
-        redirectAttributes.addFlashAttribute("errorPageMessage", "Oops! Something wrong with your session!");
+        redirectAttributes.addFlashAttribute("errorPageMessage", "Oops! Your session not found or expired!");
         return ERROR_REDIRECT;
     }
 

@@ -20,21 +20,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthenticationCheckInterceptor implements HandlerInterceptor {
 
-    private static final String SIGN_IN_VIEW = "sign-in";
-
     private final SessionService sessionService;
     private final UserMapper userMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request,
                              @NonNull HttpServletResponse response,
-                             @NonNull Object handler) throws Exception {
+                             @NonNull Object handler) {
 
         Cookie[] cookies = request.getCookies();
         Optional<Cookie> cookieOptional = CookieUtil.findSessionIdCookie(cookies);
         if (cookieOptional.isEmpty()) {
-            response.sendRedirect(SIGN_IN_VIEW);
-            return false;
+            return true;
         }
         Cookie sessionIdCookie = cookieOptional.get();
         Session session = sessionService.getSession(UUID.fromString(sessionIdCookie.getValue()));

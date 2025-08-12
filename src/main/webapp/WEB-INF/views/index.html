@@ -14,14 +14,26 @@
             <img src="images/weather-app.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
             Weather Tracker
         </a>
-        <div class="d-flex align-items-center">
+
+        <div class="d-flex align-items-center" th:if="${userDto}">
             <span class="navbar-text me-3" th:text="${userDto.login}">login</span>
-            <button class="btn btn-outline-danger">Sign out</button>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-outline-danger">Sign out</button>
+            </form>
         </div>
     </div>
 </nav>
 
-<section id="page-content">
+<section class="d-flex flex-column align-items-center justify-content-center"
+         style="min-height: 60vh;" th:unless="${userDto}">
+    <h2 class="mb-4">Welcome to Weather Tracker</h2>
+    <div>
+        <a class="btn btn-primary btn-lg me-3" th:href="@{/sign-up}">Register</a>
+        <a class="btn btn-success btn-lg" th:href="@{/sign-in}">Sign in</a>
+    </div>
+</section>
+
+<section id="page-content" th:if="${userDto}">
     <div class="container mt-4">
         <div class="d-flex my-4">
             <div class="input-group location-search-input-group me-3">
@@ -131,7 +143,7 @@
     </div>
 </section>
 
-<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 mt-4 border-top">
+<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 mt-4 border-top" th:if="${userDto}">
     <div class="px-4">
         <span>© Weather Viewer, project from <a href="https://zhukovsd.github.io/java-backend-learning-course/">zhukovsd/java-backend-learning-course</a> roadmap.</span>
     </div>

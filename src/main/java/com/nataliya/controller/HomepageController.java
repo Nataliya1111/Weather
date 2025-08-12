@@ -14,7 +14,8 @@ public class HomepageController {
     private static final String INDEX_VIEW = "index";
 
     @GetMapping
-    public String showHomepage(@RequestAttribute("authUserDto") UserDto userDto, Model model) {
+    public String showHomepage(@RequestAttribute(value = "authUserDto", required = false) UserDto userDto,
+                               Model model) {
         model.addAttribute("userDto", userDto);
 
 
