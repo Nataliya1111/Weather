@@ -1,10 +1,13 @@
 package com.nataliya.handler;
 
-import com.nataliya.dto.UserDto;
+import com.nataliya.dto.UserAuthenticationDto;
 import com.nataliya.dto.UserRegistrationDto;
 import com.nataliya.exception.AuthenticationException;
+import com.nataliya.exception.SessionNotFoundException;
 import com.nataliya.exception.UserAlreadyExistsException;
+import com.nataliya.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +16,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    private static final String SIGN_UP_REDIRECT = "redirect:/sign-up";
+    private static final String SIGN_IN_REDIRECT = "redirect:/sign-in";
+    private static final String ERROR_REDIRECT = "redirect:/error";
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public String handleException(UserAlreadyExistsException ex,
@@ -24,19 +31,37 @@ public class GlobalExceptionHandler {
         redirectAttributes.addFlashAttribute("registrationData", registrationDto);
         redirectAttributes.addFlashAttribute("userAlreadyExistsMessage", ex.getMessage());
 
-        return "redirect:/sign-up";
+        return SIGN_UP_REDIRECT;
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public String handleException (AuthenticationException ex,
-                                   HttpServletRequest request,
-                                   RedirectAttributes redirectAttributes) {
+    public String handleException(AuthenticationException ex,
+                                  HttpServletRequest request,
+                                  RedirectAttributes redirectAttributes) {
 
-        UserDto userDto = new UserDto(request.getParameter("login"), "");
+        UserAuthenticationDto userAuthenticationDto = new UserAuthenticationDto(request.getParameter("login"), "");
 
-        redirectAttributes.addFlashAttribute("signInData", userDto);
+        redirectAttributes.addFlashAttribute("signInData", userAuthenticationDto);
         redirectAttributes.addFlashAttribute("authenticationErrorMessage", ex.getMessage());
 
-        return "redirect:/sign-in";
+        return SIGN_IN_REDIRECT;
     }
+
+    @ExceptionHandler(SessionNotFoundException.class)
+    public String handleException(HttpServletRequest request,
+                                  HttpServletResponse response,
+                                  RedirectAttributes redirectAttributes) {
+        log.warn("Session not found for existing valid sessionId cookie");
+
+        CookieUtil.findSessionIdCookie(request.getCookies())
+                .ifPresentOrElse(
+                        cookie -> CookieUtil.deleteSessionIdCookie(cookie, response),
+                        () -> log.warn("SessionId cookie missing when attempting deletion")
+                );
+
+        redirectAttributes.addFlashAttribute("errorPageMessage", "Oops! Something wrong with your session!");
+        return ERROR_REDIRECT;
+    }
+
+    //public String handleGeneralException
 }

@@ -31,7 +31,7 @@ public class AuthenticationCheckInterceptor implements HandlerInterceptor {
                              @NonNull Object handler) throws Exception {
 
         Cookie[] cookies = request.getCookies();
-        Optional<Cookie> cookieOptional = CookieUtil.getSessionIdCookie(cookies);
+        Optional<Cookie> cookieOptional = CookieUtil.findSessionIdCookie(cookies);
         if (cookieOptional.isEmpty()) {
             response.sendRedirect(SIGN_IN_VIEW);
             return false;

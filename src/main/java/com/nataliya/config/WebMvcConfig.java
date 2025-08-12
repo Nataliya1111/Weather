@@ -33,7 +33,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationCheckInterceptor)
                 .addPathPatterns("/**")      // apply to all pages
-                .excludePathPatterns("/sign-in", "/sign-up", "/css/**", "/images/**"); // exceptions
+                .excludePathPatterns("/sign-in", "/sign-up", "/error", "/css/**", "/images/**"); // exceptions
     }
 
     @Bean

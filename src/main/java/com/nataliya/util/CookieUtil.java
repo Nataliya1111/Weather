@@ -1,6 +1,7 @@
 package com.nataliya.util;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -22,15 +23,20 @@ public class CookieUtil {
     }
 
     public static boolean isSessionIdCookiePresent(Cookie[] cookies) {
-        return getSessionIdCookie(cookies).isPresent();
+        return findSessionIdCookie(cookies).isPresent();
     }
 
-    public static Optional<Cookie> getSessionIdCookie(Cookie[] cookies) {
+    public static Optional<Cookie> findSessionIdCookie(Cookie[] cookies) {
         return cookies == null
                 ? Optional.empty()
                 : Arrays.stream(cookies)
                 .filter(cookie -> (SESSION_ID_COOKIE.equals(cookie.getName())))
                 .findFirst();
+    }
+
+    public static void deleteSessionIdCookie(Cookie cookie, HttpServletResponse response) {
+        Cookie sessionIdCookie = createSessionIdCookie(UUID.fromString(cookie.getValue()), 0);
+        response.addCookie(sessionIdCookie);
     }
 
 }

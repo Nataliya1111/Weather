@@ -26,6 +26,6 @@ public class SessionService {
 
     public Session getSession(UUID sessionId){
         return sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new SessionNotFoundException("Session not found for existing valid cookie"));
+                .orElseThrow(() -> new SessionNotFoundException("Session not found for existing valid sessionId cookie"));
     }
 }
