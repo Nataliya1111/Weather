@@ -24,8 +24,13 @@ public class SessionService {
         return sessionRepository.save(session);
     }
 
-    public Session getSession(UUID sessionId){
+    public Session getSession(UUID sessionId) {
         return sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new SessionNotFoundException("Session not found for existing valid sessionId cookie"));
+    }
+
+    @Transactional
+    public void deleteSession(UUID sessionId) {
+        sessionRepository.deleteById(sessionId);
     }
 }

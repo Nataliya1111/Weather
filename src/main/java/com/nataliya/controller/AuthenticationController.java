@@ -13,18 +13,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.UUID;
 
 @Controller
-@RequestMapping("/sign-in")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
+    private static final String SESSION_ID_COOKIE = "sessionId";
     private static final String SIGN_IN_VIEW = "sign-in";
     private static final String HOME_REDIRECT = "redirect:/";
 
@@ -32,7 +30,7 @@ public class AuthenticationController {
     private final SessionService sessionService;
     private final Duration sessionTimeout;
 
-    @GetMapping
+    @GetMapping("/sign-in")
     public String showAuthenticationPage(@ModelAttribute("signInData") UserAuthenticationDto userAuthenticationDto,
                                          HttpServletRequest request) {
 
@@ -42,7 +40,7 @@ public class AuthenticationController {
         return SIGN_IN_VIEW;
     }
 
-    @PostMapping
+    @PostMapping("/sign-in")
     public String signIn(@Valid @ModelAttribute("signInData") UserAuthenticationDto userAuthenticationDto,
                          BindingResult bindingResult,
                          Model model,
@@ -55,9 +53,18 @@ public class AuthenticationController {
         User user = authenticationService.getByLoginAndPassword(userAuthenticationDto);
 
         Session session = sessionService.createSession(user, sessionTimeout);
-        var cookie = CookieUtil.createSessionIdCookie(session.getId(), (int) sessionTimeout.toSeconds());
-
+        var cookie = CookieUtil.createSessionIdCookie(session.getId().toString(), (int) sessionTimeout.toSeconds());
         response.addCookie(cookie);
+
+        return HOME_REDIRECT;
+    }
+
+    @PostMapping("/logout")
+    public String logout(@CookieValue(SESSION_ID_COOKIE) String cookieValue, HttpServletResponse response) {
+
+        UUID sessionIdCookieValue = UUID.fromString(cookieValue);
+        sessionService.deleteSession(sessionIdCookieValue);
+        CookieUtil.deleteSessionIdCookie(response);
 
         return HOME_REDIRECT;
     }
