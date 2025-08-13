@@ -48,16 +48,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(SessionNotFoundException.class)
-    public String handleException(HttpServletRequest request,
-                                  HttpServletResponse response,
+    public String handleException(HttpServletResponse response,
                                   RedirectAttributes redirectAttributes) {
         log.warn("Session not found for existing valid sessionId cookie");
 
-        CookieUtil.findSessionIdCookie(request.getCookies())
-                .ifPresentOrElse(
-                        cookie -> CookieUtil.deleteSessionIdCookie(cookie, response),
-                        () -> log.warn("SessionId cookie missing when attempting deletion")
-                );
+        CookieUtil.deleteSessionIdCookie(response);
 
         redirectAttributes.addFlashAttribute("errorPageMessage", "Oops! Your session not found or expired!");
         return ERROR_REDIRECT;

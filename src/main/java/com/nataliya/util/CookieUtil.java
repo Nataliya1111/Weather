@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CookieUtil {
@@ -15,8 +14,8 @@ public class CookieUtil {
     private static final String SESSION_ID_COOKIE = "sessionId";
 
 
-    public static Cookie createSessionIdCookie(UUID sessionId, int sessionTimeout) {
-        var cookie = new Cookie(SESSION_ID_COOKIE, sessionId.toString());
+    public static Cookie createSessionIdCookie(String cookieValue, int sessionTimeout) {
+        var cookie = new Cookie(SESSION_ID_COOKIE, cookieValue);
         cookie.setPath("/");
         cookie.setMaxAge(sessionTimeout);
         return cookie;
@@ -34,9 +33,9 @@ public class CookieUtil {
                 .findFirst();
     }
 
-    public static void deleteSessionIdCookie(Cookie cookie, HttpServletResponse response) {
-        Cookie sessionIdCookie = createSessionIdCookie(UUID.fromString(cookie.getValue()), 0);
-        response.addCookie(sessionIdCookie);
+    public static void deleteSessionIdCookie(HttpServletResponse response) {
+        Cookie newSessionIdCookie = createSessionIdCookie("", 0);
+        response.addCookie(newSessionIdCookie);
     }
 
 }
