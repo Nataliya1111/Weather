@@ -26,9 +26,15 @@ public class SessionService {
         return sessionRepository.save(session);
     }
 
-    public Session getSession(UUID sessionId) {
-        return sessionRepository.findById(sessionId)
+    public Session getValidSession(UUID sessionId) {
+
+        Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new SessionNotFoundException("Session not found for existing valid sessionId cookie"));
+        if (session.getExpiresAt().isBefore(LocalDateTime.now())) {
+            sessionRepository.deleteById(sessionId);
+            throw new SessionNotFoundException("Session is expired for existing valid sessionId cookie");
+        }
+        return session;
     }
 
     @Transactional
@@ -38,7 +44,7 @@ public class SessionService {
 
     @Scheduled(fixedRateString = "${session.cleanup.period}", timeUnit = TimeUnit.SECONDS)
     @Transactional
-    public void deleteExpiredSessions(){
+    public void deleteExpiredSessions() {
         sessionRepository.deleteSessionByExpiresAtBefore(LocalDateTime.now());
     }
 }

@@ -34,7 +34,7 @@ public class AuthenticationCheckInterceptor implements HandlerInterceptor {
             return true;
         }
         Cookie sessionIdCookie = cookieOptional.get();
-        Session session = sessionService.getSession(UUID.fromString(sessionIdCookie.getValue()));
+        Session session = sessionService.getValidSession(UUID.fromString(sessionIdCookie.getValue()));
         UserDto userDto = userMapper.userToUserDto(session.getUser());
 
         request.setAttribute("authUserDto", userDto);

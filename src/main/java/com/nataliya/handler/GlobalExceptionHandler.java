@@ -48,9 +48,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(SessionNotFoundException.class)
-    public String handleException(HttpServletResponse response,
+    public String handleException(SessionNotFoundException ex,
+                                  HttpServletResponse response,
                                   RedirectAttributes redirectAttributes) {
-        log.warn("Session not found for existing valid sessionId cookie");
+        log.warn(ex.getMessage());
 
         CookieUtil.deleteSessionIdCookie(response);
 
