@@ -5,12 +5,14 @@ import com.nataliya.model.Session;
 import com.nataliya.model.User;
 import com.nataliya.repository.SessionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +34,11 @@ public class SessionService {
     @Transactional
     public void deleteSession(UUID sessionId) {
         sessionRepository.deleteById(sessionId);
+    }
+
+    @Scheduled(fixedRateString = "${session.cleanup.period}", timeUnit = TimeUnit.SECONDS)
+    @Transactional
+    public void deleteExpiredSessions(){
+        sessionRepository.deleteSessionByExpiresAtBefore(LocalDateTime.now());
     }
 }
