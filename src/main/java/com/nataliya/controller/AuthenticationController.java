@@ -1,7 +1,6 @@
 package com.nataliya.controller;
 
 import com.nataliya.dto.UserAuthenticationDto;
-import com.nataliya.model.Session;
 import com.nataliya.model.User;
 import com.nataliya.service.AuthenticationService;
 import com.nataliya.service.SessionService;
@@ -15,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Duration;
 import java.util.UUID;
 
 @Controller
@@ -28,7 +26,6 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final SessionService sessionService;
-    private final Duration sessionTimeout;
 
     @GetMapping("/sign-in")
     public String showAuthenticationPage(@ModelAttribute("signInData") UserAuthenticationDto userAuthenticationDto,
@@ -51,10 +48,7 @@ public class AuthenticationController {
         }
 
         User user = authenticationService.getByLoginAndPassword(userAuthenticationDto);
-
-        Session session = sessionService.createSession(user, sessionTimeout);
-        var cookie = CookieUtil.createSessionIdCookie(session.getId().toString(), (int) sessionTimeout.toSeconds());
-        response.addCookie(cookie);
+        authenticationService.authenticate(user, response);
 
         return HOME_REDIRECT;
     }
