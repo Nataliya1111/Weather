@@ -18,6 +18,7 @@ public class CookieUtil {
         var cookie = new Cookie(SESSION_ID_COOKIE, cookieValue);
         cookie.setPath("/");
         cookie.setMaxAge(sessionTimeout);
+        cookie.setHttpOnly(true);
         return cookie;
     }
 
