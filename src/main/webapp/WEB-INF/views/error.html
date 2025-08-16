@@ -9,9 +9,9 @@
 <body>
 
 <div class="container text-center mt-5">
-    <h1 class="display-4" th:text="${errorPageMessage} ? ${errorPageMessage} : 'Oops! Something Went Wrong'">Oops! Something Went Wrong</h1>
+    <h1 class="display-4" th:text="${errorPageMessage} ? ${errorPageMessage} : 'Oops! Something Went Wrong'">Error message</h1>
     <p class="lead">We're sorry, but an unexpected error has occurred. Please try again later.</p>
-    <a class="btn btn-primary" th:href="@{/}">Go to Home</a>
+    <a class="btn btn-primary" th:href="@{/}">Go to Homepage</a>
 </div>
 
 </body>

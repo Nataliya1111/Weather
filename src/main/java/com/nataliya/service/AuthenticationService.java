@@ -2,7 +2,6 @@ package com.nataliya.service;
 
 import com.nataliya.model.Session;
 import com.nataliya.model.User;
-import com.nataliya.repository.UserRepository;
 import com.nataliya.util.CookieUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

@@ -59,5 +59,15 @@ public class GlobalExceptionHandler {
         return ERROR_REDIRECT;
     }
 
-    //public String handleGeneralException
+    @ExceptionHandler(Exception.class)
+    public String handleGeneralException(Exception ex, HttpServletRequest request) {
+
+        log.error("Unhandled exception at [{} {}]: {}",
+                request.getMethod(),
+                request.getRequestURI(),
+                ex.getMessage(),
+                ex);
+
+        return ERROR_REDIRECT;
+    }
 }
