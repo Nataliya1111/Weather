@@ -7,8 +7,9 @@ import com.nataliya.dto.UserRegistrationDto;
 import com.nataliya.model.User;
 import com.nataliya.repository.UserRepository;
 import com.nataliya.service.RegistrationService;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {ApplicationConfig.class, TestDataSourceConfig.class, TestFlywayConfig.class})
@@ -32,20 +32,21 @@ public class RegistrationServiceIT {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
-        //parametrised test
-    void registerUser() {
+    @ParameterizedTest
+    @CsvSource({
+            "TestName1, Password1",
+            "TestName2, Password2",
+            "TestName3, Password3"
+    })
+    void registerUser_withValidData_createsUser(String login, String password) {
 
-        UserRegistrationDto userRegistrationDto = new UserRegistrationDto("Nataliya", "1Qazwsx", "1Qazwsx");
+        UserRegistrationDto userRegistrationDto = new UserRegistrationDto(login, password, password);
         registrationService.registerUser(userRegistrationDto);
 
-        //assertNotNull(actualResult);
-
-        Optional<User> actualResult = userRepository.findByLogin("Nataliya");
+        Optional<User> actualResult = userRepository.findByLogin(login);
         assertTrue(actualResult.isPresent());
-
-        //другие тесты здесь же или отдельно, как именовать
-
+        assertNotNull(actualResult.get().getId());
+        assertEquals(login, actualResult.get().getLogin());
 
     }
 }
