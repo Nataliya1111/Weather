@@ -4,9 +4,11 @@ import com.nataliya.config.ApplicationConfig;
 import com.nataliya.config.TestDataSourceConfig;
 import com.nataliya.config.TestFlywayConfig;
 import com.nataliya.dto.UserRegistrationDto;
+import com.nataliya.exception.UserAlreadyExistsException;
 import com.nataliya.model.User;
 import com.nataliya.repository.UserRepository;
 import com.nataliya.service.RegistrationService;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -18,7 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {ApplicationConfig.class, TestDataSourceConfig.class, TestFlywayConfig.class})
@@ -35,18 +38,34 @@ public class RegistrationServiceIT {
     @ParameterizedTest
     @CsvSource({
             "TestName1, Password1",
-            "TestName2, Password2",
-            "TestName3, Password3"
+            "AnotherUser, Pass123@#$",
+            "User3, asD1234"
     })
-    void registerUser_withValidData_createsUser(String login, String password) {
+    void registerUser_whenValidData_thenCreatesUser(String login, String password) {
 
         UserRegistrationDto userRegistrationDto = new UserRegistrationDto(login, password, password);
         registrationService.registerUser(userRegistrationDto);
 
         Optional<User> actualResult = userRepository.findByLogin(login);
-        assertTrue(actualResult.isPresent());
-        assertNotNull(actualResult.get().getId());
-        assertEquals(login, actualResult.get().getLogin());
 
+        assertThat(actualResult)
+                .isPresent()
+                .get()
+                .satisfies((user) -> {
+                    assertThat(user.getId()).isNotNull();
+                    assertThat(user.getLogin()).isEqualTo(login);
+                });
+    }
+
+    @Test
+    void registerUser_whenDuplicateLogin_thenThrowsException() {
+
+        String userName = "TestName1";
+
+        UserRegistrationDto userRegistrationDto = new UserRegistrationDto(userName, "Password1", "Password1");
+        registrationService.registerUser(userRegistrationDto);
+
+        assertThatThrownBy(() -> registrationService.registerUser(new UserRegistrationDto(userName, "Pass123@#$", "Pass123@#$")))
+                .isInstanceOf(UserAlreadyExistsException.class);
     }
 }
