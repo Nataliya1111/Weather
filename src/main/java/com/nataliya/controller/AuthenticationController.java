@@ -1,10 +1,8 @@
 package com.nataliya.controller;
 
 import com.nataliya.dto.UserAuthenticationDto;
-import com.nataliya.model.User;
 import com.nataliya.service.AuthenticationService;
 import com.nataliya.service.SessionService;
-import com.nataliya.service.UserService;
 import com.nataliya.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,7 +24,6 @@ public class AuthenticationController {
     private static final String HOME_REDIRECT = "redirect:/";
 
     private final AuthenticationService authenticationService;
-    private final UserService userService;
     private final SessionService sessionService;
 
     @GetMapping("/sign-in")
@@ -49,8 +46,7 @@ public class AuthenticationController {
             return SIGN_IN_VIEW;
         }
 
-        User user = userService.getByLoginAndPassword(userAuthenticationDto);
-        authenticationService.authenticate(user, response);
+        authenticationService.authenticate(userAuthenticationDto, response);
 
         return HOME_REDIRECT;
     }

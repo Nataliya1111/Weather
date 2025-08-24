@@ -1,5 +1,6 @@
 package com.nataliya.service;
 
+import com.nataliya.dto.UserAuthenticationDto;
 import com.nataliya.model.Session;
 import com.nataliya.model.User;
 import com.nataliya.util.CookieUtil;
@@ -13,6 +14,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+    private final UserService userService;
     private final SessionService sessionService;
     private final Duration sessionTimeout;
 
@@ -20,6 +22,11 @@ public class AuthenticationService {
         Session session = sessionService.createSession(user, sessionTimeout);
         var cookie = CookieUtil.createSessionIdCookie(session.getId().toString(), (int) sessionTimeout.toSeconds());
         response.addCookie(cookie);
+    }
+
+    public void authenticate(UserAuthenticationDto userAuthenticationDto, HttpServletResponse response) {
+        User user = userService.getByLoginAndPassword(userAuthenticationDto);
+        authenticate(user, response);
     }
 
 }
