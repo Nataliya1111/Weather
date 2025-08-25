@@ -11,8 +11,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@ToString
-@EqualsAndHashCode
 public class Location {
 
     @Id
@@ -23,8 +21,8 @@ public class Location {
     @Column(name = "Name", nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "User_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "User_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     @Column(name = "Latitude", nullable = false)
