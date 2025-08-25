@@ -74,11 +74,13 @@ public class AuthenticationServiceIT {
 
         Session session = sessionService.getValidSession(sessionId);
 
+        LocalDateTime now = LocalDateTime.now();
+
         assertAll(
                 () -> assertThat(session.getUser()).isEqualTo(user),
                 () -> assertThat(session.getExpiresAt())
-                        .isAfter(LocalDateTime.now())
-                        .isBefore(LocalDateTime.now().plus(sessionTimeout))
+                        .isAfter(now)
+                        .isBeforeOrEqualTo(now.plus(sessionTimeout))
         );
     }
 
