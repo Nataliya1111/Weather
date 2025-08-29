@@ -1,4 +1,4 @@
-package com.nataliya.config;
+package com.nataliya.integration.config;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.context.annotation.Bean;

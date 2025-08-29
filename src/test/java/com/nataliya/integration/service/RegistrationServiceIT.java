@@ -1,8 +1,8 @@
 package com.nataliya.integration.service;
 
 import com.nataliya.config.ApplicationConfig;
-import com.nataliya.config.TestDataSourceConfig;
-import com.nataliya.config.TestFlywayConfig;
+import com.nataliya.integration.config.TestDataSourceConfig;
+import com.nataliya.integration.config.TestFlywayConfig;
 import com.nataliya.dto.UserRegistrationDto;
 import com.nataliya.exception.UserAlreadyExistsException;
 import com.nataliya.model.User;
