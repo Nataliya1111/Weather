@@ -5,10 +5,12 @@ import com.nataliya.dto.UserRegistrationDto;
 import com.nataliya.exception.AuthenticationException;
 import com.nataliya.exception.SessionNotFoundException;
 import com.nataliya.exception.UserAlreadyExistsException;
+import com.nataliya.exception.WeatherApiResponseException;
 import com.nataliya.util.CookieUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -56,6 +58,25 @@ public class GlobalExceptionHandler {
         CookieUtil.deleteSessionIdCookie(response);
 
         redirectAttributes.addFlashAttribute("errorPageMessage", "Oops! Your session not found or expired!");
+        return ERROR_REDIRECT;
+    }
+
+    @ExceptionHandler(WeatherApiResponseException.class)
+    public String handleException(WeatherApiResponseException ex,
+                                  RedirectAttributes redirectAttributes) {
+
+        HttpStatus status = ex.getStatus();
+
+        log.warn(ex.getMessage(), ex);
+
+        if (status == HttpStatus.BAD_REQUEST) {
+            redirectAttributes.addFlashAttribute("errorPageMessage", "Bad request: check your input.");
+        } else if (status == HttpStatus.URI_TOO_LONG) {
+            redirectAttributes.addFlashAttribute("errorPageMessage", "Location name is too long.");
+        } else {
+            redirectAttributes.addFlashAttribute("errorPageMessage", ex.getMessage());
+        }
+
         return ERROR_REDIRECT;
     }
 
