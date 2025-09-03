@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
         } else if (status == HttpStatus.URI_TOO_LONG) {
             redirectAttributes.addFlashAttribute("errorPageMessage", "Location name is too long.");
         } else {
-            redirectAttributes.addFlashAttribute("errorPageMessage", ex.getMessage());
+            redirectAttributes.addFlashAttribute("errorPageMessage", String.format("Weather API call failed with status: %d - %s.", status.value(), status.getReasonPhrase()));
         }
 
         return ERROR_REDIRECT;

@@ -2,7 +2,8 @@ package com.nataliya.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nataliya.dto.LocationDto;
+import com.nataliya.dto.LocationApiResponseDto;
+import com.nataliya.dto.WeatherApiResponseDto;
 import com.nataliya.exception.LocationNotFoundException;
 import com.nataliya.exception.WeatherApiResponseException;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.List;
 public class OpenWeatherApiService {
 
     private static final String BASE_GEOCODING_URL = "http://api.openweathermap.org/geo/1.0/direct";
+    private static final String BASE_WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather";
     private static final int LOCATIONS_NUMBER_LIMIT = 5;
 
     private final HttpClient httpClient;
@@ -31,7 +33,10 @@ public class OpenWeatherApiService {
     @Value("${WEATHER_API_KEY}")
     private String weatherApiKey;
 
-    public List<LocationDto> getLocationsByName(String locationName) throws IOException, InterruptedException {
+    @Value("${weather.api.units.of.measurement}")
+    private String unitsOfMeasurement;
+
+    public List<LocationApiResponseDto> getLocationsByName(String locationName) throws IOException, InterruptedException {
 
         URI uri = UriComponentsBuilder
                 .fromUriString(BASE_GEOCODING_URL)
@@ -49,17 +54,48 @@ public class OpenWeatherApiService {
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        validateResponse(response, uri);
 
-        HttpStatus status = HttpStatus.resolve(response.statusCode());
-        if (status.isError()) {
-            handleErrorResponse(status, uri);
-        }
         return objectMapper.readValue(response.body(), new TypeReference<>() {
         });
     }
 
-    private void handleErrorResponse(HttpStatus status, URI uri) {
-        if (status == HttpStatus.NOT_FOUND) {
+    public WeatherApiResponseDto getWeatherByLocation(LocationApiResponseDto locationApiResponseDto) throws IOException, InterruptedException {
+
+        URI uri = UriComponentsBuilder
+                .fromUriString(BASE_WEATHER_URL)
+                .queryParam("lat", locationApiResponseDto.latitude())
+                .queryParam("lon", locationApiResponseDto.longitude())
+                .queryParam("units", unitsOfMeasurement)
+                .queryParam("appid", weatherApiKey)
+                .encode()
+                .build()
+                .toUri();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .header("Accept", "application/json")
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        validateResponse(response, uri);
+
+        return objectMapper.readValue(response.body(), WeatherApiResponseDto.class);
+    }
+
+    private void validateResponse(HttpResponse<String> response, URI uri) {
+        HttpStatus status = HttpStatus.resolve(response.statusCode());
+        if (status == null) {
+            throw new WeatherApiResponseException(
+                    "Unknown HTTP status: " + response.statusCode(), null
+            );
+        }
+        if (!status.isError()) {
+            return;
+        }
+
+        if (status == HttpStatus.NOT_FOUND & uri.toString().startsWith(BASE_GEOCODING_URL)) {
             throw new LocationNotFoundException("Location not found");
         } else {
             throw new WeatherApiResponseException(
