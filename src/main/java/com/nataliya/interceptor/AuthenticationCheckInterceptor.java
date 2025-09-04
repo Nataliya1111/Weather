@@ -1,5 +1,6 @@
 package com.nataliya.interceptor;
 
+import com.nataliya.controller.SearchLocationsController;
 import com.nataliya.dto.UserDto;
 import com.nataliya.mapper.UserMapper;
 import com.nataliya.model.Session;
@@ -11,8 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,17 +23,27 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthenticationCheckInterceptor implements HandlerInterceptor {
 
+    private static final String HOME_URL = "/";
+
     private final SessionService sessionService;
     private final UserMapper userMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request,
                              @NonNull HttpServletResponse response,
-                             @NonNull Object handler) {
+                             @NonNull Object handler) throws IOException {
 
         Cookie[] cookies = request.getCookies();
         Optional<Cookie> cookieOptional = CookieUtil.findSessionIdCookie(cookies);
         if (cookieOptional.isEmpty()) {
+            if (handler instanceof HandlerMethod handlerMethod) {
+                Class<?> controllerClass = handlerMethod.getBeanType();
+
+                if (controllerClass.equals(SearchLocationsController.class)) {
+                    response.sendRedirect(request.getContextPath() + HOME_URL);
+                    return false;
+                }
+            }
             return true;
         }
         Cookie sessionIdCookie = cookieOptional.get();
@@ -41,5 +54,4 @@ public class AuthenticationCheckInterceptor implements HandlerInterceptor {
 
         return true;
     }
-
 }
