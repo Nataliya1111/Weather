@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -24,23 +25,29 @@ public class SearchLocationsController {
 
     @GetMapping
     public String showSearchPage(@RequestAttribute(value = "authUserDto") UserDto userDto,
-                               Model model) {
+                                 @RequestParam(required = false) String locationQuery,
+                                 Model model) throws IOException, InterruptedException {
 
         model.addAttribute("userDto", userDto);
+
+        if (locationQuery == null || locationQuery.isBlank()) {
+            model.addAttribute("locationQueryErrorMessage", "Location name must not be blank");
+            return SEARCH_VIEW;
+        }
+
+        locationQuery = locationQuery.trim();
+        List<LocationApiResponseDto> searchedLocations = openWeatherApiService.getLocationsByName(locationQuery);
+        model.addAttribute("locationQuery", locationQuery);
+
+        if (searchedLocations.isEmpty()) {
+            model.addAttribute("locationQueryErrorMessage", "Locations with such names are not found");
+            return SEARCH_VIEW;
+        }
+
+        model.addAttribute("locations", searchedLocations);
 
         return SEARCH_VIEW;
     }
 
-    @PostMapping
-    public String searchLocations(@ModelAttribute("locationNameToSearch") String locationNameToSearch) throws IOException, InterruptedException {
 
-        System.out.println("Location: " + locationNameToSearch);
-
-        List<LocationApiResponseDto> locationsByName = openWeatherApiService.getLocationsByName(locationNameToSearch);
-        System.out.println(locationsByName);
-
-
-
-        return SEARCH_REDIRECT;
-    }
 }

@@ -35,15 +35,19 @@
 
 <section id="page-content" th:if="${userDto}">
     <div class="container mt-4">
-        <form th:method="POST" th:action="@{/search-results}" class="d-flex my-4">
+        <form th:method="GET" th:action="@{/search-results}" class="d-flex my-4">
             <div class="input-group location-search-input-group me-3">
-                <input class="form-control" type="text" name="locationNameToSearch" placeholder="Enter location" required>
+                <input class="form-control"
+                       type="text"
+                       name="locationQuery"
+                       placeholder="Enter location"
+                       required>
                 <button class="btn btn-outline-secondary btn-sm clear-input-button" type="button"
                         onclick="this.previousElementSibling.value=''">
                     &times;
                 </button>
             </div>
-            <button class="btn btn-outline-success">Search</button>
+            <button type="submit" class="btn btn-outline-success">Search</button>
         </form>
 
         <div>
