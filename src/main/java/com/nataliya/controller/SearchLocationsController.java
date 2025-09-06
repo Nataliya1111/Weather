@@ -1,7 +1,9 @@
 package com.nataliya.controller;
 
-import com.nataliya.dto.LocationApiResponseDto;
+import com.nataliya.dto.LocationRequestDto;
+import com.nataliya.dto.api.LocationApiResponseDto;
 import com.nataliya.dto.UserDto;
+import com.nataliya.service.LocationsService;
 import com.nataliya.service.OpenWeatherApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -19,9 +20,9 @@ public class SearchLocationsController {
 
     private static final String SEARCH_VIEW = "search-results";
     private static final String HOME_REDIRECT = "redirect:/";
-    private static final String SEARCH_REDIRECT = "redirect:/search-results";
 
     private final OpenWeatherApiService openWeatherApiService;
+    private final LocationsService locationsService;
 
     @GetMapping
     public String showSearchPage(@RequestAttribute(value = "authUserDto") UserDto userDto,
@@ -49,5 +50,13 @@ public class SearchLocationsController {
         return SEARCH_VIEW;
     }
 
+    @PostMapping
+    public String addUserLocation(@RequestAttribute(value = "authUserDto") UserDto userDto,
+                                  @ModelAttribute(value = "location") LocationRequestDto locationDto) {
+
+        locationsService.saveLocation(locationDto, userDto);
+
+        return HOME_REDIRECT;
+    }
 
 }

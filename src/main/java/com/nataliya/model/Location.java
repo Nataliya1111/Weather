@@ -4,13 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 @Entity
 @Table(name = "Locations")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
+@Setter
 public class Location {
 
     @Id

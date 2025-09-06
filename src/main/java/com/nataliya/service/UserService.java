@@ -41,6 +41,10 @@ public class UserService {
         return user;
     }
 
+    public User getByLogin(String login) {
+        return userRepository.getUserByLogin(login);
+    }
+
     private boolean isPasswordMatches(String plainTextPassword, String encodedPassword) {
         return BCrypt.checkpw(plainTextPassword, encodedPassword);
     }
