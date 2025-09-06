@@ -32,10 +32,10 @@ public class UserService {
     public User getByLoginAndPassword(UserAuthenticationDto userAuthenticationDto) {
 
         User user = userRepository.findByLogin(userAuthenticationDto.login())
-                .orElseThrow(() -> new AuthenticationException("Invalid username or password"));
+                .orElseThrow(() -> new AuthenticationException("Invalid username during authentication"));
 
         if (!isPasswordMatches(userAuthenticationDto.password(), user.getPassword())) {
-            throw new AuthenticationException("Invalid username or password");
+            throw new AuthenticationException("Invalid password during authentication");
         }
 
         return user;

@@ -41,10 +41,12 @@ public class GlobalExceptionHandler {
                                   HttpServletRequest request,
                                   RedirectAttributes redirectAttributes) {
 
+        log.info(ex.getMessage());
+
         UserAuthenticationDto userAuthenticationDto = new UserAuthenticationDto(request.getParameter("login"), "");
 
         redirectAttributes.addFlashAttribute("signInData", userAuthenticationDto);
-        redirectAttributes.addFlashAttribute("authenticationErrorMessage", ex.getMessage());
+        redirectAttributes.addFlashAttribute("authenticationErrorMessage", "Invalid username or password");
 
         return SIGN_IN_REDIRECT;
     }
