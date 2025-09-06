@@ -2,8 +2,8 @@ package com.nataliya.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nataliya.dto.LocationApiResponseDto;
-import com.nataliya.dto.WeatherApiResponseDto;
+import com.nataliya.dto.api.LocationApiResponseDto;
+import com.nataliya.dto.api.WeatherApiResponseDto;
 import com.nataliya.exception.LocationNotFoundException;
 import com.nataliya.exception.WeatherApiResponseException;
 import lombok.RequiredArgsConstructor;

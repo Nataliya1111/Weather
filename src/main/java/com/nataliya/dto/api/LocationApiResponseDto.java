@@ -1,11 +1,13 @@
-package com.nataliya.dto;
+package com.nataliya.dto.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.math.BigDecimal;
+
 public record LocationApiResponseDto(
         String name,
-        @JsonProperty("lat") String latitude,
-        @JsonProperty("lon") String longitude,
+        @JsonProperty("lat") BigDecimal latitude,
+        @JsonProperty("lon") BigDecimal longitude,
         String country,
         String state
 ) {

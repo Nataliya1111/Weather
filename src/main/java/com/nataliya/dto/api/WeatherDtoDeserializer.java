@@ -1,4 +1,4 @@
-package com.nataliya.dto;
+package com.nataliya.dto.api;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
