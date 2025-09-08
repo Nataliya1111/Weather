@@ -3,12 +3,16 @@ package com.nataliya.controller;
 import com.nataliya.dto.LocationRequestDto;
 import com.nataliya.dto.api.LocationApiResponseDto;
 import com.nataliya.dto.UserDto;
+import com.nataliya.exception.DuplicateLocationException;
+import com.nataliya.exception.TooManyLocationsException;
 import com.nataliya.service.LocationsService;
 import com.nataliya.service.OpenWeatherApiService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,9 +20,11 @@ import java.util.List;
 @Controller
 @RequestMapping("/search-results")
 @RequiredArgsConstructor
+@Slf4j
 public class SearchLocationsController {
 
     private static final String SEARCH_VIEW = "search-results";
+    private static final String SEARCH_RESULTS_REDIRECT = "redirect:/search-results";
     private static final String HOME_REDIRECT = "redirect:/";
 
     private final OpenWeatherApiService openWeatherApiService;
@@ -52,9 +58,21 @@ public class SearchLocationsController {
 
     @PostMapping
     public String addUserLocation(@RequestAttribute(value = "authUserDto") UserDto userDto,
-                                  @ModelAttribute(value = "location") LocationRequestDto locationDto) {
+                                  @ModelAttribute(value = "location") LocationRequestDto locationDto,
+                                  @RequestParam String locationQuery,
+                                  RedirectAttributes redirectAttributes) {
 
-        locationsService.saveLocation(locationDto, userDto);
+        try {
+            locationsService.saveLocation(locationDto, userDto);
+        } catch (TooManyLocationsException | DuplicateLocationException ex) {
+            log.info((ex.getClass().equals(TooManyLocationsException.class))
+                    ? "Attempt to save too many locations fore one user. {}"
+                    : "Attempt to create duplicate location. {}"
+                    , ex.getMessage());
+            redirectAttributes.addAttribute("locationQuery", locationQuery);
+            redirectAttributes.addFlashAttribute("saveLocationErrorMessage", ex.getMessage());
+            return SEARCH_RESULTS_REDIRECT;
+        }
 
         return HOME_REDIRECT;
     }

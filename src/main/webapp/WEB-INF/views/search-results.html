@@ -43,8 +43,22 @@
 
         <div class="row justify-content-center">
             <div class="col-12 col-lg-4 col-md-6 col-sm-12">
-                <div class="alert alert-danger" role="alert" th:if="${locationQueryErrorMessage}" th:text="${locationQueryErrorMessage}">
+                <div class="alert alert-danger"
+                     role="alert"
+                     th:if="${locationQueryErrorMessage}"
+                     th:text="${locationQueryErrorMessage}">
                     Invalid query.
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-6 col-md-8 col-sm-12">
+                <div class="alert alert-danger py-1 my-2 small text-center"
+                     role="alert"
+                     th:if="${saveLocationErrorMessage}"
+                     th:text="${saveLocationErrorMessage}">
+                    An error occurred.
                 </div>
             </div>
         </div>
@@ -61,7 +75,8 @@
                             <p class="card-text mb-1">Country: <span th:text="${location.country}"></span></p>
                             <p class="card-text mb-3" th:if="${location.state}">State: <span th:text="${location.state}"></span></p>
                             <div class="mt-auto">
-                                <form th:action="@{/search-results}" method="post">
+                                <form th:action="@{/search-results}" method="POST">
+                                    <input type="hidden" name="locationQuery" th:value="${locationQuery}">
                                     <input type="hidden" name="name" th:value="${location.name}">
                                     <input type="hidden" name="latitude" th:value="${location.latitude}">
                                     <input type="hidden" name="longitude" th:value="${location.longitude}">
