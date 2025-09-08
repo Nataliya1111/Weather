@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -60,12 +61,12 @@ public class OpenWeatherApiService {
         });
     }
 
-    public WeatherApiResponseDto getWeatherByLocation(LocationApiResponseDto locationApiResponseDto) throws IOException, InterruptedException {
+    public WeatherApiResponseDto getWeatherByLocation(BigDecimal latitude, BigDecimal longitude) throws IOException, InterruptedException {
 
         URI uri = UriComponentsBuilder
                 .fromUriString(BASE_WEATHER_URL)
-                .queryParam("lat", locationApiResponseDto.latitude())
-                .queryParam("lon", locationApiResponseDto.longitude())
+                .queryParam("lat", latitude)
+                .queryParam("lon", longitude)
                 .queryParam("units", unitsOfMeasurement)
                 .queryParam("appid", weatherApiKey)
                 .encode()

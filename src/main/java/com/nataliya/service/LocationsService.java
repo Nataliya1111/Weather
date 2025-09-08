@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.RoundingMode;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,11 @@ public class LocationsService {
 
         Location location = locationMapper.locationRequestDtoToLocation(locationDto, user);
         locationRepository.save(location);
+    }
+
+    public List<Location> getByUserDto(UserDto userDto) {
+        User user = userService.getByLogin(userDto.login());
+        return locationRepository.getLocationsByUser(user);
     }
 
     private void ensureLocationCanBeSaved(User user, LocationRequestDto locationDto) {

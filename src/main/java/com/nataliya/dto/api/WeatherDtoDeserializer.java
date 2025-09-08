@@ -24,7 +24,7 @@ public class WeatherDtoDeserializer extends JsonDeserializer<WeatherApiResponseD
         double temperature = main.get("temp").asDouble();
         double feelsLike = main.get("feels_like").asDouble();
         int humidity = main.get("humidity").asInt();
-        String weatherDescription = weather.get("description").asText();
+        String weatherDescription = capitalizeFirstLetter(weather.get("description").asText());
         String icon = weather.get("icon").asText();
 
         return new WeatherApiResponseDto(
@@ -37,5 +37,9 @@ public class WeatherDtoDeserializer extends JsonDeserializer<WeatherApiResponseD
                 weatherDescription,
                 icon
         );
+    }
+
+    private String capitalizeFirstLetter(String string) {
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 }
