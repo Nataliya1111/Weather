@@ -16,4 +16,6 @@ public interface LocationRepository extends CrudRepository<Location, Long> {
     boolean existsByUserAndLatitudeAndLongitude(User user, BigDecimal latitude, BigDecimal longitude);
 
     List<Location> getLocationsByUser(User user);
+
+    void deleteByNameAndLatitudeAndLongitude(String name, BigDecimal latitude, BigDecimal longitude);
 }

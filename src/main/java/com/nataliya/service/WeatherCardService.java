@@ -34,6 +34,6 @@ public class WeatherCardService {
     private WeatherCardDto getWeatherCard(Location location) throws IOException, InterruptedException {
         WeatherApiResponseDto weatherDto = openWeatherApiService
                 .getWeatherByLocation(location.getLatitude(), location.getLongitude());
-        return weatherMapper.weatherApiResponseDtoToWeatherCardDto(weatherDto, location.getName());
+        return weatherMapper.weatherApiResponseDtoToWeatherCardDto(weatherDto, location);
     }
 }

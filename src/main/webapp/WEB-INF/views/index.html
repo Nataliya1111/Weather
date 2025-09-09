@@ -54,9 +54,12 @@
             <div class="row">
                 <div class="col-12 col-lg-3 col-md-6 mb-4" th:each="weatherCard : ${weatherCards}">
                     <div class="card h-100 position-relative weather-card">
-                        <div class="position-absolute weather-card-delete-form">
-                            <button class="btn-close" aria-label="Delete"></button>
-                        </div>
+                        <form th:method="DELETE" th:action="@{/}" class="position-absolute weather-card-delete-form">
+                            <input type="hidden" name="name" th:value="${weatherCard.name}">
+                            <input type="hidden" name="latitude" th:value="${weatherCard.latitude}">
+                            <input type="hidden" name="longitude" th:value="${weatherCard.longitude}">
+                            <button type="submit" class="btn-close" aria-label="Delete"></button>
+                        </form>
                         <img class="card-img-top img-fluid"
                              th:src="'https://openweathermap.org/img/wn/' + ${weatherCard.icon} + '@4x.png'"
                              alt="Weather icon">

@@ -1,5 +1,6 @@
 package com.nataliya.service;
 
+import com.nataliya.dto.LocationCoordinatesDto;
 import com.nataliya.dto.LocationRequestDto;
 import com.nataliya.dto.UserDto;
 import com.nataliya.exception.DuplicateLocationException;
@@ -38,6 +39,11 @@ public class LocationsService {
     public List<Location> getByUserDto(UserDto userDto) {
         User user = userService.getByLogin(userDto.login());
         return locationRepository.getLocationsByUser(user);
+    }
+
+    @Transactional
+    public void deleteLocation(LocationCoordinatesDto dto) {
+        locationRepository.deleteByNameAndLatitudeAndLongitude(dto.name(), dto.latitude(), dto.longitude());
     }
 
     private void ensureLocationCanBeSaved(User user, LocationRequestDto locationDto) {
