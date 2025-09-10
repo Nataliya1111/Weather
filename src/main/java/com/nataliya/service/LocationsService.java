@@ -42,8 +42,9 @@ public class LocationsService {
     }
 
     @Transactional
-    public void deleteLocation(LocationCoordinatesDto dto) {
-        locationRepository.deleteByNameAndLatitudeAndLongitude(dto.name(), dto.latitude(), dto.longitude());
+    public void deleteLocation(LocationCoordinatesDto dto, UserDto userDto) {
+        User user = userService.getByLogin(userDto.login());
+        locationRepository.deleteByNameAndLatitudeAndLongitudeAndUser(dto.name(), dto.latitude(), dto.longitude(), user);
     }
 
     private void ensureLocationCanBeSaved(User user, LocationRequestDto locationDto) {

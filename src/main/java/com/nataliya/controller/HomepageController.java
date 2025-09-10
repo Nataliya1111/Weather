@@ -40,9 +40,13 @@ public class HomepageController {
     }
 
     @DeleteMapping
-    public String deleteLocation(@ModelAttribute(value = "locationCoordinatesDto") LocationCoordinatesDto locationCoordinatesDto) {
+    public String deleteLocation(@ModelAttribute(value = "locationCoordinatesDto") LocationCoordinatesDto locationCoordinatesDto,
+                                 @RequestAttribute(value = "authUserDto", required = false) UserDto userDto) {
 
-        locationsService.deleteLocation(locationCoordinatesDto);
+        if (userDto == null) {
+            return HOME_REDIRECT;
+        }
+        locationsService.deleteLocation(locationCoordinatesDto, userDto);
         return HOME_REDIRECT;
     }
 }
