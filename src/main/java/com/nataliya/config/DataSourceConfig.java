@@ -14,7 +14,7 @@ import java.util.Properties;
 
 @Configuration
 @RequiredArgsConstructor
-@PropertySource("classpath:hibernate.properties")
+@PropertySource("classpath:database.properties")
 @Profile("!test")
 public class DataSourceConfig {
 

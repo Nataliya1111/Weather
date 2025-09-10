@@ -102,13 +102,13 @@ public class AuthenticationServiceIT {
         assertAll(
                 () -> assertThatThrownBy(() -> authenticationService.authenticate(userAuthenticationDto1, response))
                         .isInstanceOf(AuthenticationException.class)
-                        .hasMessage("Invalid username or password"),
+                        .hasMessage("Invalid username during authentication"),
                 () -> assertThatThrownBy(() -> authenticationService.authenticate(userAuthenticationDto2, response))
                         .isInstanceOf(AuthenticationException.class)
-                        .hasMessage("Invalid username or password"),
+                        .hasMessage("Invalid username during authentication"),
                 () -> assertThatThrownBy(() -> authenticationService.authenticate(userAuthenticationDto3, response))
                         .isInstanceOf(AuthenticationException.class)
-                        .hasMessage("Invalid username or password")
+                        .hasMessage("Invalid password during authentication")
         );
     }
 }

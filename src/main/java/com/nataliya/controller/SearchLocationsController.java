@@ -47,7 +47,7 @@ public class SearchLocationsController {
         model.addAttribute("locationQuery", locationQuery);
 
         if (searchedLocations.isEmpty()) {
-            model.addAttribute("locationQueryErrorMessage", "Locations with such names are not found");
+            model.addAttribute("locationQueryErrorMessage", "Locations with such name are not found");
             return SEARCH_VIEW;
         }
 
@@ -66,8 +66,8 @@ public class SearchLocationsController {
             locationsService.saveLocation(locationDto, userDto);
         } catch (TooManyLocationsException | DuplicateLocationException ex) {
             log.info((ex.getClass().equals(TooManyLocationsException.class))
-                    ? "Attempt to save too many locations fore one user. {}"
-                    : "Attempt to create duplicate location. {}"
+                            ? "Attempt to save too many locations fore one user. {}"
+                            : "Attempt to create duplicate location. {}"
                     , ex.getMessage());
             redirectAttributes.addAttribute("locationQuery", locationQuery);
             redirectAttributes.addFlashAttribute("saveLocationErrorMessage", ex.getMessage());

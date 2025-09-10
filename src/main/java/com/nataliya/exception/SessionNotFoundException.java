@@ -6,7 +6,4 @@ public class SessionNotFoundException extends RuntimeException{
         super(message);
     }
 
-    public SessionNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

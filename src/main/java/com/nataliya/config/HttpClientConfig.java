@@ -10,7 +10,7 @@ import java.time.Duration;
 public class HttpClientConfig {
 
     @Bean
-    public HttpClient httpClient(){
+    public HttpClient httpClient() {
         return HttpClient
                 .newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))

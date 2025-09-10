@@ -31,7 +31,7 @@ public class OpenWeatherApiService {
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
 
-    @Value("${WEATHER_API_KEY}")
+    @Value("${weather.api.key}")
     private String weatherApiKey;
 
     @Value("${weather.api.units.of.measurement}")
